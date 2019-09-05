@@ -400,7 +400,7 @@ type Rule struct {
 	} `xml:"policy-action>policy-tcp-options"`
 }
 
-//SystemInformation
+// SystemInformation to fetch the Systen Hostname and Model Info
 type SystemInformation struct {
 	XMLName       xml.Name `xml:"system-information"`
 	Text          string   `xml:",chardata"`
@@ -427,7 +427,7 @@ type Views struct {
 	Storage        Storage
 	VirtualChassis VirtualChassis
 	Vlan           Vlans
-	HostnameInfo   SystemInformation
+	SystemInfo     SystemInformation
 }
 
 var (
@@ -614,7 +614,7 @@ func (j *Junos) View(view string, option ...string) (*Views, error) {
 			return nil, err
 		}
 
-		results.HostnameInfo = hostInfo
+		results.SystemInfo = hostInfo
 	case "staticnat":
 		var staticnats StaticNats
 		formatted := strings.Replace(reply.Data, "\n", "", -1)
@@ -740,4 +740,3 @@ func (j *Junos) View(view string, option ...string) (*Views, error) {
 
 	return &results, nil
 }
-
