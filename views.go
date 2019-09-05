@@ -62,12 +62,14 @@ type PhysicalInterface struct {
 	OperStatus              string             `xml:"oper-status"`
 	LocalIndex              int                `xml:"local-index"`
 	SNMPIndex               int                `xml:"snmp-index"`
+	Description             string             `xml:"description"`
 	LinkLevelType           string             `xml:"link-level-type"`
 	MTU                     string             `xml:"mtu"`
 	LinkMode                string             `xml:"link-mode"`
 	Speed                   string             `xml:"speed"`
 	FlowControl             string             `xml:"if-flow-control"`
 	AutoNegotiation         string             `xml:"if-auto-negotiation"`
+	CurrentPhysicalAddress  string             `xml:"current-physical-address"`
 	HardwarePhysicalAddress string             `xml:"hardware-physical-address"`
 	Flapped                 string             `xml:"interface-flapped"`
 	InputBps                int                `xml:"traffic-statistics>input-bps"`
