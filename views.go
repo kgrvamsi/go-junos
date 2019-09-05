@@ -400,6 +400,17 @@ type Rule struct {
 	} `xml:"policy-action>policy-tcp-options"`
 }
 
+//SystemInformation
+type SystemInformation struct {
+	XMLName       xml.Name `xml:"system-information"`
+	Text          string   `xml:",chardata"`
+	HardwareModel string   `xml:"hardware-model"`
+	OsName        string   `xml:"os-name"`
+	OsVersion     string   `xml:"os-version"`
+	SerialNumber  string   `xml:"serial-number"`
+	HostName      string   `xml:"host-name"`
+}
+
 // Views contains the information for the specific views. Note that some views aren't available for specific
 // hardware platforms, such as the "VirtualChassis" view on an SRX.
 type Views struct {
@@ -416,6 +427,7 @@ type Views struct {
 	Storage        Storage
 	VirtualChassis VirtualChassis
 	Vlan           Vlans
+	HostnameInfo   SystemInformation
 }
 
 var (
@@ -433,6 +445,7 @@ var (
 		"sourcenat":      "<get-source-nat-rule-sets-information><all/></get-source-nat-rule-sets-information>",
 		"storage":        "<get-system-storage/>",
 		"firewallpolicy": "<get-firewall-policies/>",
+		"hostname":       "<get-system-information/>",
 	}
 )
 
@@ -593,6 +606,15 @@ func (j *Junos) View(view string, option ...string) (*Views, error) {
 		}
 
 		results.BGP = bgpTable
+	case "hostname":
+		var hostInfo SystemInformation
+		formatted := strings.Replace(reply.Data, "\n", "", -1)
+
+		if err := xml.Unmarshal([]byte(formatted), &hostInfo); err != nil {
+			return nil, err
+		}
+
+		results.HostnameInfo = hostInfo
 	case "staticnat":
 		var staticnats StaticNats
 		formatted := strings.Replace(reply.Data, "\n", "", -1)
@@ -718,3 +740,4 @@ func (j *Junos) View(view string, option ...string) (*Views, error) {
 
 	return &results, nil
 }
+
